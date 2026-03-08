@@ -1,4 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import type { Session } from "next-auth";
+import { SignOutButton } from "@/components/sign-out-button";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -130,10 +135,12 @@ const FEATURES = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const session = await getServerSession(authOptions);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
-      <Nav />
+      <Nav session={session} />
 
       <main className="flex-1">
         <Hero />
@@ -150,7 +157,9 @@ export default function LandingPage() {
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
-function Nav() {
+function Nav({ session }: { session: Session | null }) {
+  const isSignedIn = !!session?.user;
+
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
@@ -178,20 +187,48 @@ function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/auth/signin"
-            className="text-xs text-zinc-400 hover:text-zinc-100 font-mono transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/auth/signin"
-            className="px-3 py-1.5 bg-zinc-100 hover:bg-white text-zinc-900 text-xs font-mono font-medium rounded-md transition-colors"
-          >
-            Get started
-          </Link>
-        </div>
+        {isSignedIn ? (
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-xs text-emerald-400 hover:text-emerald-300 font-mono transition-colors"
+            >
+              Dashboard
+            </Link>
+            <div className="w-px h-4 bg-zinc-700" />
+            <div className="flex items-center gap-2">
+              {session.user?.image && (
+                <Image
+                  src={session.user.image}
+                  alt={session.user?.name ?? "User avatar"}
+                  width={24}
+                  height={24}
+                  className="rounded-full ring-1 ring-zinc-700"
+                />
+              )}
+              <span className="text-xs text-zinc-400 font-mono hidden sm:block">
+                {session.user?.name ?? session.user?.email}
+              </span>
+            </div>
+            <div className="w-px h-4 bg-zinc-700" />
+            <SignOutButton />
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <Link
+              href="/auth/signin"
+              className="text-xs text-zinc-400 hover:text-zinc-100 font-mono transition-colors"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/auth/signin"
+              className="px-3 py-1.5 bg-zinc-100 hover:bg-white text-zinc-900 text-xs font-mono font-medium rounded-md transition-colors"
+            >
+              Get started
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );
