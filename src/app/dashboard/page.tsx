@@ -1,4 +1,5 @@
 import { PRGenerator } from "@/components/pr-generator";
+import { CopyCommand } from "@/components/copy-command";
 
 export default function DashboardPage() {
   return (
@@ -16,6 +17,12 @@ export default function DashboardPage() {
         <p className="text-sm text-zinc-400 font-mono">
           Paste a git diff + commit messages → get a ready-to-use PR description
         </p>
+      </div>
+
+      {/* Diff hint */}
+      <div className="mb-6 flex items-center gap-3 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg">
+        <span className="text-xs text-zinc-500 font-mono shrink-0">How to get your diff:</span>
+        <CopyCommand command="git diff origin/main" />
       </div>
 
       <PRGenerator />

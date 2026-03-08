@@ -24,7 +24,9 @@
 
 ![GitScribe Landing Page](./public/landing.png)
 
-![GitScribe Dashboard](./public/demo.png)
+![GitScribe demo](./public/demo.png)
+
+![GitScribe dasboard](./public/dashboard.png)
 
 ## What GitScribe Does
 
