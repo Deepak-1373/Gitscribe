@@ -94,7 +94,7 @@ Limits exist to prevent abuse while the product is tested with real developers.
 
 **Backend**
 - Next.js API routes
-- Gemini AI API
+- AI Auth API
 
 **Infrastructure**
 - Vercel hosting
